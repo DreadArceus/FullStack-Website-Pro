@@ -39,10 +39,18 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { em, req }: MyContext): Promise<User | null> {
+    if (!req.session.userID) {
+      return null;
+    }
+    const user = await em.findOne(User, { id: req.session.userID });
+    return user;
+  }
   @Mutation(() => UserResponse)
   async register(
     @Arg("options") options: UsernamePasswordInput,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     const hashedPassword = await argon2.hash(options.password);
     const user = em.create(User, {
@@ -63,13 +71,16 @@ export class UserResolver {
         };
       }
     }
+
+    req.session!.userID = user.id;
+
     return { user: user };
   }
 
   @Query(() => UserResponse)
   async login(
     @Arg("options") options: UsernamePasswordInput,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     const user = await em.findOne(User, { username: options.username });
     if (!user) {
@@ -93,6 +104,9 @@ export class UserResolver {
         ],
       };
     }
+
+    req.session!.userID = user.id;
+
     return { user: user };
   }
 }
