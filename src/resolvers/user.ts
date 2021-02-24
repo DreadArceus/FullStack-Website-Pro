@@ -59,6 +59,7 @@ export class UserResolver {
     });
     try {
       await em.persistAndFlush(user);
+      //This does not error out for me, [TODO: QueryBuilder]
     } catch (err) {
       if (err.code === "23505") {
         return {
