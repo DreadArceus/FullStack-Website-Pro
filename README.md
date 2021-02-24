@@ -1,2 +1,3 @@
-# FullStack-Website-Pro
-Following Ben Awad's tutorial to see how pros make a fullstack website
+# Pro-FullStack-Backend
+
+Express.js + GraphQL + PostgresQL + Mikro-ORM/Type-ORRM
