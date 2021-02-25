@@ -78,7 +78,7 @@ export class UserResolver {
     return { user: user };
   }
 
-  @Query(() => UserResponse)
+  @Mutation(() => UserResponse)
   async login(
     @Arg("options") options: UsernamePasswordInput,
     @Ctx() { em, req }: MyContext
